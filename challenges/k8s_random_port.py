@@ -23,5 +23,3 @@ class K8sRandomPortChallengeType(K8sChallengeType):
         'view': '/plugins/ctfd-k8s-challenge/assets/k8s_random_port/view.js',
     }
     route = '/plugins/ctfd-k8s-challenge/assets/k8s_random_port'
-    blueprint = Blueprint('ctfd-k8s-challenge-random-port', __name__,
-                        template_folder='templates', static_folder='assets')

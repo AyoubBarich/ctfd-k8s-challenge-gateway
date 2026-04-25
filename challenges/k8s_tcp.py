@@ -23,5 +23,3 @@ class K8sTcpChallengeType(K8sChallengeType):
         'view': '/plugins/ctfd-k8s-challenge/assets/k8s_tcp/view.js',
     }
     route = '/plugins/ctfd-k8s-challenge/assets/k8s_tcp'
-    blueprint = Blueprint('ctfd-k8s-challenge-tcp', __name__,
-                            template_folder='templates', static_folder='assets')
