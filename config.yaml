@@ -1,14 +1,18 @@
-git_username: user
+git_username: env
 git_credential: env
 registry_password: env
+
 registry_namespace: registry
-challenge_namespace: challenges
-istio_namespace: istio-system
-tcp_domain_name: chal.example.com
-https_domain_name: web.example.com
-certificate_issuer_name: istio-issuer
-istio_ingress_name: ingressgateway
+challenge_namespace: ctfd-challenges
+istio_namespace: aks-istio-system
+
+tcp_domain_name: chal.ctf.thcon.party
+https_domain_name: web.ctf.thcon.party
+
+certificate_issuer_name: letsencrypt
+istio_ingress_name: thcon-ctf-istio        
 external_tcp_port: 443
 external_https_port: 443
+
 expire_interval: 3600
-ctfd_url: http://ctfd-service.ctfd
+ctfd_url: http://ctfd.ctfd.svc.cluster.local:8000

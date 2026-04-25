@@ -23,8 +23,8 @@ spec:
           protocol: TCP
         resources:
           limits:
-            memory: "50Mi"
-            cpu: "25m"
+            memory: "256Mi"
+            cpu: "500m"
       imagePullSecrets:
         - name: {{ deployment_name }}-pull
 ---
@@ -51,30 +51,22 @@ spec:
       port: {{ challenge_port }}
       targetPort: {{ challenge_port }}
 ---
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
-  name: {{ deployment_name }}-vs
+  name: {{ deployment_name }}-route
   namespace: {{ challenge_namespace }}
 spec:
-  hosts:
+  parentRefs:
+  - name: thcon-ctf
+    namespace: aks-istio-ingress
+  hostnames:
   - "{{ deployment_name }}.{{ https_domain_name }}"
-  gateways:
-  - {{ istio_namespace }}/k8s-https-challenge-gateway
-  http:
-  - route:
-    - destination:
-        host: {{ deployment_name }}-service
-        port:
-          number: {{ challenge_port }}
----
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: {{ deployment_name }}
-  namespace: {{ challenge_namespace }}
-spec:
-  host: {{ deployment_name }}-service
-  trafficPolicy:
-    tls:
-      mode: DISABLE
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: {{ deployment_name }}-service
+      port: {{ challenge_port }}

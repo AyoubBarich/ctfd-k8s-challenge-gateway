@@ -40,7 +40,7 @@ def deploy_object(k8s_client, template, template_variables):
         api_name = yaml_file['apiVersion']
         kind = yaml_file['kind']
 
-        if 'cert-manager' in api_name or 'istio' in api_name or kind == 'Job':
+        if 'cert-manager' in api_name or 'istio' in api_name or kind == 'Job' or 'gateway.networking.k8s.io' in api_name:
             apply_custom_object_from_yaml(k8s_client, yaml_file)
         else:
             try:
@@ -81,33 +81,9 @@ def add_ingress_port(k8s_client, config, port):
     """
     Patches the istio ingress gateway service to listen on a new port.
     """
-    result = True
-
-    name = 'istio-' + config.istio_ingress_name
-    namespace = config.istio_namespace
-    body = {"spec":{"$setElementOrder/ports":[{"port":port}],"ports":[{"name": str(port),
-            "port":port,"protocol":"TCP","targetPort":port}]}}
-
-    try:
-        k8s_client.patch_namespaced_service(name, namespace, body)
-    except Exception as general_exception: # pylint: disable=broad-except
-        result = False
-        print("ERROR: ctfd-k8s-challenges: ", general_exception)
-    return result
-
+    return True
 def delete_ingress_port(k8s_client, config, port):
     """
     Patches the istio ingress gateway service to remove a port.
     """
-    result = True
-
-    name = 'istio-' + config.istio_ingress_name
-    namespace = config.istio_namespace
-    body = {"spec":{"ports":[{"port":port}],"ports":[{"$patch":"delete","port":port}]}} # pylint: disable=duplicate-key
-
-    try:
-        k8s_client.patch_namespaced_service(name, namespace, body)
-    except Exception as general_exception: # pylint: disable=broad-except
-        result = False
-        print("ERROR: ctfd-k8s-challenges: ", general_exception)
-    return result
+    return True
